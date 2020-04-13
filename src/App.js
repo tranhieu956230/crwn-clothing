@@ -5,7 +5,7 @@ import Header from "components/Header";
 import LoginPage from "pages/LoginPage";
 import ShopPage from "pages/ShopPage";
 
-import { auth } from "./firebase";
+import { auth, createUserProfileDocument } from "./firebase";
 
 import "./App.css";
 
@@ -13,8 +13,20 @@ const App = () => {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    return auth.onAuthStateChanged((user) => setCurrentUser(user));
-  });
+    return auth.onAuthStateChanged(async (userAuth) => {
+      if (userAuth) {
+        const userRef = await createUserProfileDocument(userAuth);
+        userRef.onSnapshot((snapShot) => {
+          setCurrentUser({
+            id: snapShot.id,
+            ...snapShot.data(),
+          });
+        });
+      } else {
+        setCurrentUser(userAuth);
+      }
+    });
+  }, []);
 
   return (
     <div>
