@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import FormInput from "components/FormInput";
 import Button from "components/Button";
+
+import { signInWithGoogle } from "../../firebase";
+
 import "./SignIn.scss";
 
 const SignIn = () => {
@@ -18,7 +21,7 @@ const SignIn = () => {
 
   return (
     <div className="sign-in">
-      <h2>I already have an account</h2>
+      <h2 className="title">I already have an account</h2>
       <span>Sign in with your email and password</span>
       <form onSubmit={handleSubmit}>
         <FormInput
@@ -37,7 +40,18 @@ const SignIn = () => {
           label="Password"
           required
         />
-        <Button type="submit">Sign In</Button>
+        <div className="buttons">
+          <Button type="submit">Sign In</Button>
+          <Button
+            btnGoogle
+            onClick={(e) => {
+              e.preventDefault();
+              signInWithGoogle();
+            }}
+          >
+            Sign In With Google
+          </Button>
+        </div>
       </form>
     </div>
   );
